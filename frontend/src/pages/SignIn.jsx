@@ -7,7 +7,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+  const { loadingAction, error } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(clearError());
@@ -67,10 +67,10 @@ export default function SignIn() {
         </div>
 
         <button
-          disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          disabled={loadingAction != null}
+          className="bg-slate-700 text-white p-3 rounded-lg hover:opacity-95 disabled:opacity-80"
         >
-          {loading ? "LOADING..." : "SIGN IN"}
+          {loadingAction === 'sigin' ? "Signing in..." : "Sign in"}
         </button>
       </form>
       <div className="flex gap-2 mt-5">

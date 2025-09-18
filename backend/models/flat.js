@@ -5,11 +5,19 @@ const flatSchema=mongoose.Schema({
         type: String,
         required: true,
     },
+    description : {
+        type: String,
+        required: true,
+    },
     address:{
         type : String,
         required : true,
     },
-    description : {
+    contact : {
+        type: String,
+        required: true,
+    },
+    apartmentNumber : {
         type: String,
         required: true,
     },
@@ -21,6 +29,22 @@ const flatSchema=mongoose.Schema({
         type : String,
         required : true,
 
+    },
+    bhk : {
+        type : Number,
+        required : true,
+    },
+    sharing : {
+        type : Number,
+        required : true,
+    },
+    parking : {
+        type : Boolean,
+        required : true,
+    },
+    furnished : {
+        type : Boolean,
+        required: true,
     },
     offer : {
         type: Boolean,
@@ -34,30 +58,7 @@ const flatSchema=mongoose.Schema({
         type : Number,
         required : true,
     },
-    
-    bhk : {
-        type : Number,
-        required : true,
-    },
-    furnished : {
-        type : Boolean,
-        required: true,
-    },
-    parkingSpace : {
-        type : Boolean,
-        required : true,
-    },
-    messFacility : {
-        type : Boolean,
-        required : true,
-    },
-    sharing : {
-        type : Number,
-        required : true,
-    },
-    
-    
-    imageUrls : {
+    imageInfo : {
         type : Array,
         required : true,
     },

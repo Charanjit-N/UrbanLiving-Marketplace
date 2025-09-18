@@ -4,10 +4,10 @@ const { addFlat,deleteFlat,updateFlat,getFlat,getFlats} = require("../controller
 const {verifyToken} = require("../middleware/auth")
 
 
-router.post("/create",verifyToken,addFlat);
-router.put("/update/:id",verifyToken,updateFlat);
+router.post("/add",verifyToken,addFlat);
+router.post("/update/:id",verifyToken,updateFlat);
 router.delete("/delete/:id",verifyToken,deleteFlat);
-router.get("/:id",getFlat);
-router.get("/",getFlats);
+router.get("/get/:id",getFlat);
+router.get("/get",getFlats);
 
 module.exports=router

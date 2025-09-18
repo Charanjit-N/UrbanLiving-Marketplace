@@ -17,7 +17,9 @@ import {
 
 export default function UserProfile() {
   const navigate = useNavigate();
-  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const { currentUser, loadingAction, error } = useSelector(
+    (state) => state.user
+  );
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const [formData, setFormData] = useState({});
@@ -67,8 +69,7 @@ export default function UserProfile() {
       }
       dispatch(deleteUserSuccess());
       navigate("/");
-      
-    }catch (err) {
+    } catch (err) {
       dispatch(deleteUserFailure(err.message));
     }
   };
@@ -92,10 +93,10 @@ export default function UserProfile() {
 
   return (
     <div className="p-3 max-w-lg mx-auto mb-30">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      <h1 className="text-3xl font-semibold text-center my-5">Profile</h1>
 
       <div className="flex justify-center">
-        <FaUserCircle className="w-20 h-20 mb-7" />
+        <FaUserCircle className="w-20 h-20 mb-6" />
       </div>
 
       <div className=" flex justify-center mb-7 gap-7">
@@ -142,23 +143,24 @@ export default function UserProfile() {
         ></input>
 
         <button
-          disabled={loading}
-          className="bg-slate-700 text-white rounded-lg p-3  cursor-pointer hover:opacity-100 disabled: opacity-90"
+          disabled={loadingAction !== null} // Disable if any action is loading
+          className="bg-slate-700 text-white rounded-lg p-3 cursor-pointer hover:opacity-90 "
         >
-          {loading ? "loading..." : "Update"}
+          {loadingAction === "update" ? "Updating..." : "Update"}
         </button>
       </form>
 
       <div className="flex justify-between mt-5">
         <button
-          className="bg-red-400 cursor-pointer  text-white p-2 rounded-lg text-center hover:opacity-90"
+          className="bg-red-500 cursor-pointer text-white p-2 rounded-lg text-center hover:opacity-90 "
           onClick={handleOnDeleteUser}
+          disabled={loadingAction !== null} // Disable if any action is loading
         >
-          Delete account
+          {loadingAction === "delete" ? "Deleting..." : "Delete account"}
         </button>
 
         <button
-          className="bg-red-400 cursor-pointer  text-white p-2 rounded-lg text-center hover:opacity-90"
+          className="bg-red-500 cursor-pointer  text-white p-2 rounded-lg text-center hover:opacity-90"
           onClick={handleOnSignOut}
         >
           SignOut

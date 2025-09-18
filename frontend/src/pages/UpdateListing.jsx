@@ -2,15 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { IoPeople } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
-
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function NewListing() {
   const navigate = useNavigate();
+  const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
 
   const [files, setFiles] = useState([]);
-
   const [formData, setFormData] = useState({
     imageInfo: [],
     name: "",
@@ -29,13 +28,38 @@ export default function NewListing() {
     offer: false,
   });
 
+  const [deleteImagePublicIds, setDeleteImagePublicIds] = useState([]);
+  const [newlyUploadedImages, setNewlyUploadedImages] = useState([]);
+  const newlyUploadedImagesRef = useRef(newlyUploadedImages);
+
   const [uploading, setUploading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState(false);
   const [deletingImageId, setDeletingImageId] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const isSubmittingRef = useRef(false);
-  const imageInfoRef = useRef(formData.imageInfo);
+
+  useEffect(() => {
+    const fetchListing = async () => {
+      const listingId = params.listingId;
+      const res = await fetch(`/api/flat-pg/get/${listingId}`);
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+
+      if (data.listedBy !== currentUser._id) {
+        navigate("/");
+        return;
+      }
+
+      setFormData(data);
+      setInitialImageInfo(data.imageInfo);
+    };
+
+    fetchListing();
+  }, [params.listingId, currentUser._id, navigate]);
 
   const handleOnChange = (e) => {
     const { id, value, checked } = e.target;
@@ -116,6 +140,7 @@ export default function NewListing() {
           ...formData,
           imageInfo: formData.imageInfo.concat(uploadedImageInfo),
         });
+        setNewlyUploadedImages((prev) => [...prev, ...uploadedImageInfo]);
         setImageUploadError(false);
       } catch (error) {
         setImageUploadError(error.message);
@@ -128,33 +153,12 @@ export default function NewListing() {
     }
   };
 
-  const handleRemoveImage = async (index, public_id) => {
-    setDeletingImageId(public_id);
-    try {
-      const res = await fetch("/api/deleteImageFromCloudinary", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ public_ids: [public_id] }),
-      });
-
-      const data = await res.json();
-
-      if (data.success === false) {
-        console.error("Failed to delete image from server:", data.message);
-        return;
-      }
-
-      setFormData({
-        ...formData,
-        imageInfo: formData.imageInfo.filter((_, i) => i !== index),
-      });
-    } catch (error) {
-      console.error("Error calling delete API:", error);
-    } finally {
-      setDeletingImageId(null);
-    }
+  const handleRemoveImage = async (indexToRemove, public_id) => {
+    setDeleteImagePublicIds([...deleteImagePublicIds, public_id]);
+    setFormData({
+      ...formData,
+      imageInfo: formData.imageInfo.filter((_, i) => i !== indexToRemove),
+    });
   };
 
   const handleOnSubmit = async (e) => {
@@ -169,7 +173,7 @@ export default function NewListing() {
 
       setLoading(true);
       setError(false);
-      const res = await fetch("/api/flat-pg/add", {
+      const res = await fetch(`/api/flat-pg/update/${params.listingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -185,7 +189,17 @@ export default function NewListing() {
         setError(data.message);
         return;
       }
+
       isSubmittingRef.current = true;
+
+      // 2. On successful update, if there are images to delete, delete them
+      if (deleteImagePublicIds.length > 0) {
+        await fetch("/api/deleteImageFromCloudinary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ public_ids: deleteImagePublicIds }),
+        });
+      }
       navigate(`/apartment-pg/${data._id}`);
     } catch (err) {
       setError(err.message);
@@ -193,58 +207,54 @@ export default function NewListing() {
     }
   };
 
+  // This effect's only job is to update the ref when the state changes.
   useEffect(() => {
-    imageInfoRef.current = formData.imageInfo;
-  }, [formData.imageInfo]);
+    newlyUploadedImagesRef.current = newlyUploadedImages;
+  }, [newlyUploadedImages]);
+  // Cleanup Logic for Navigating Away ---
 
-  // Handling clean up when user navigates to other page without submitting form
   useEffect(() => {
     return () => {
-      const imagesToClean = imageInfoRef.current;
-      if (isSubmittingRef.current || imagesToClean.length === 0) {
+      // This cleanup function will now ONLY run on unmount
+
+      if (isSubmittingRef.current) {
         return;
       }
-      console.log(
-        "Component unmounting, cleaning up orphaned images...",
-        imagesToClean
+      // Read the LATEST value from the ref
+      const publicIdsToClean = newlyUploadedImagesRef.current.map(
+        (img) => img.public_id
       );
-      const cleanup = async () => {
-        const publicIdsToClean = imagesToClean.map((img) => img.public_id);
 
-        if (publicIdsToClean.length === 0) {
-          return;
-        }
+      if (publicIdsToClean.length > 0) {
+        console.log(
+          "Navigating away, cleaning up ALL newly uploaded images:",
+          publicIdsToClean
+        );
 
-        try {
-          await fetch("/api/deleteImageFromCloudinary", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ public_ids: publicIdsToClean }),
-          });
-        } catch (error) {
-          console.error("Cleanup failed during navigation:", error);
-        }
-      };
-
-      cleanup();
+        fetch("/api/deleteImageFromCloudinary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ public_ids: publicIdsToClean }),
+        });
+      }
     };
-  }, []);
+  }, []); // The empty array [] ensures this runs ONLY on mount and unmount
 
-  // Handling clean up when user reloads the page or cose the tab without submitting
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      if (imageInfoRef.current.length > 0 && !isSubmittingRef.current) {
-        const publicIdsToClean = imageInfoRef.current.map(
+      if (
+        newlyUploadedImagesRef.current.length > 0 &&
+        !isSubmittingRef.current
+      ) {
+        const publicIdsToClean = newlyUploadedImagesRef.current.map(
           (img) => img.public_id
         );
+
         const url = "/api/deleteImageFromCloudinary";
 
-        // THIS IS THE IMPROVEMENT: Use a Blob to ensure correct Content-Type
         const data = new Blob(
           [JSON.stringify({ public_ids: publicIdsToClean })],
-          {
-            type: "application/json",
-          }
+          { type: "application/json" }
         );
 
         navigator.sendBeacon(url, data);
@@ -309,8 +319,6 @@ export default function NewListing() {
             placeholder="contact"
             className="border p-3 rounded-lg"
             id="contact"
-            minLength={8}
-            maxLength={8}
             required
             onChange={handleOnChange}
             value={formData.contact}
@@ -582,7 +590,7 @@ export default function NewListing() {
             disabled={loading || uploading}
             className="p-3 bg-blue-400 text-white rounded-lg hover:opacity-95 disabled:opacity-80 cursor-pointer"
           >
-            {loading ? "Adding....." : "Add Apartment / PG"}
+            {loading ? "Updating....." : "Update"}
           </button>
           {error && (
             <p className="text-red-700 text-sm flex justify-center">{error}</p>
@@ -592,3 +600,5 @@ export default function NewListing() {
     </main>
   );
 }
+
+

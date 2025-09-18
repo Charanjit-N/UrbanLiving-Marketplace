@@ -1,50 +1,98 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch, FaUserCircle } from "react-icons/fa";
-
+import { FaSearch, FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import { BsBuildingsFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+
+  // closes the mobile menu on screen resize
+  useEffect(() => {
+    const handleResize = () => {
+      //  breakpoint "lg" is 1024px in tailwond
+      if (window.innerWidth > 1024) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <header className="bg-yellow-100 shadow-md">
-      <div className="flex justify-between items-center max-w-7xl mx-auto p-3">
-        <h1
-          className="font-bold text-sm sm:text-xl flex flex-wrap cursor-pointer"
+    <header className="bg-black shadow-[0_2px_8px_rgba(255,255,0,0.7)]">
+      <div className="flex justify-between items-center max-w-7xl mx-auto p-2">
+        {/* Logo */}
+        <div
+          className="font-bold text-xl sm:text-2xl flex flex-wrap gap-2 items-center cursor-pointer"
           onClick={() => {
             navigate("/");
           }}
         >
-          <span className="text-black-500">Find Your Flat</span>
-        </h1>
+          <BsBuildingsFill className="text-yellow-300 text-xl" />
+          <span className="text-yellow-300">Urban Living</span>
+        </div>
 
-        <form className="bg-green-200 p-3 rounded-lg flex items-center">
+        {/* Search */}
+        <form
+          onSubmit={handleOnSubmit}
+          className="bg-gray-100 p-2 m-1 rounded-lg flex items-center"
+        >
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent focus:outline-none w-24 sm:w-64"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
           <button>
-            <FaSearch className="text-slate-600" />
+            <FaSearch className="text-slate-600 cursor-pointer" />
           </button>
         </form>
 
-        <ul className="flex gap-4 ">
+        {/* Desktop Menu */}
+        <ul className="items-center font-bold flex text-white gap-8 ">
           <li
-            className="hidden sm:inline text-slate-700 hover:underline cursor-pointer"
+            className="hidden lg:inline  hover:underline cursor-pointer"
             onClick={() => {
               navigate("/");
             }}
           >
             Home
           </li>
-          <li className="hidden sm:inline text-slate-700 hover:underline cursor-pointer">
+          <li
+            className="hidden lg:inline  hover:underline cursor-pointer"
+            onClick={() => {
+              navigate("/my-listings");
+            }}
+          >
             My Listings
           </li>
           <li
-            className="hidden sm:inline text-slate-700 hover:underline cursor-pointer"
+            className="hidden lg:inline  hover:underline cursor-pointer"
             onClick={() => {
               navigate("/about");
             }}
@@ -53,17 +101,19 @@ export default function Navbar() {
           </li>
 
           {currentUser ? (
-            <button
-              type="button"
-              onClick={() => navigate("/user-profile")}
-              aria-label="View user profile" // Important for screen readers
-              className="bg-transparent border-none cursor-pointer" // Resets default button styles
-            >
-              <FaUserCircle className="w-10 h-10" />
-            </button>
+            <li>
+              <button
+                type="button"
+                onClick={() => navigate("/user-profile")}
+                aria-label="View user profile" 
+                className=" hidden lg:inline bg-transparent border-none cursor-pointer" 
+              >
+                <FaUserCircle className="w-10 h-10" />
+              </button>
+            </li>
           ) : (
             <li
-              className=" text-slate-700 hover:underline cursor-pointer"
+              className="hidden lg:inline hover:underline cursor-pointer"
               onClick={() => {
                 navigate("/signIn");
               }}
@@ -72,6 +122,67 @@ export default function Navbar() {
             </li>
           )}
         </ul>
+        {/* Mobile Menu button */}
+        <button
+          className="lg:hidden text-yellow-300 text-2xl cursor-pointer"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {/* Mobile Dropdown */}
+        {menuOpen && (
+          <div className="absolute top-14 right-2 bg-white text-black font-bold rounded-lg shadow-lg p-4 flex flex-col gap-3 w-40 z-50 items-center">
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/");
+                setMenuOpen(false);
+              }}
+            >
+              Home
+            </button>
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/my-listings");
+                setMenuOpen(false);
+              }}
+            >
+              My Listings
+            </button>
+            <button
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/about");
+                setMenuOpen(false);
+              }}
+            >
+              About
+            </button>
+            {currentUser ? (
+              <button
+                onClick={() => {
+                  navigate("/user-profile");
+                  setMenuOpen(false);
+                }}
+                className="flex gap-2 cursor-pointer"
+              >
+                <FaUserCircle className="w-6 h-6" /> Profile
+              </button>
+            ) : (
+              <button
+                className="cursor-pointer"
+                onClick={() => {
+                  navigate("/signIn");
+                  setMenuOpen(false);
+                }}
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );
