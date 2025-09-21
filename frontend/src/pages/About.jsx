@@ -8,18 +8,18 @@ import {
 export default function About() {
   return (
     <div className='py-20 px-4 max-w-7xl mx-auto'>
-      <h1 className="text-3xl font-bold mb-4 text-slate-800 ">
+      <h1 className="text-3xl font-bold mb-4 ">
         About Us
       </h1>
-      <p className="mb-4 text-slate-700">
-        Welcome to Find your flat and PG, your dedicated online platform for
+      <p className="mb-4 text-gray-600">
+        Welcome to Urban Living, your dedicated online platform for
         discovering the perfect home. We specialize in simplifying the search
-        for flats and PGs, whether you are looking to rent or buy. Our mission
+        for Apartments and PGs, whether you are looking to rent or buy. Our mission
         is to make finding your next home a simple, efficient, and stress-free
         experience.
       </p>
 
-      <p className="mb-4 text-slate-700">
+      <p className="mb-4 text-gray-600">
         Our goal is to empower you in your property search by providing a
         comprehensive and user-friendly platform. We connect you with a wide
         range of listings, from rental flats and properties for sale to
@@ -29,18 +29,16 @@ export default function About() {
         you at every stage of your journey.
       </p>
 
-      <p className="mb-4 text-slate-700">
+      <p className="mb-4 text-gray-600">
         We believe that the search for a new home should be an exciting and
         hopeful time. Our commitment is to provide you with detailed, reliable
-        listings and the tools you need to make an informed decision. At Find
-        your flat and PG, we are dedicated to helping you easily and confidently
+        listings and the tools you need to make an informed decision. At Urban Living, we are dedicated to helping you easily and confidently
         find a place you can truly call home.
       </p>
 
      
-      <div className =" flex justify-center ">
+      <div className =" flex mt-10 ">
           <h2 className="text-xl font-bold mb-2">
-            
             <span className="text-black">Charanjit Nandigama &nbsp; : &nbsp; </span>
           </h2>
           <div className="flex items-center space-x-4">

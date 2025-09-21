@@ -1,11 +1,12 @@
 const express=require("express")
 const router=express.Router()
-const {userSignUp,userLogin,userLogout,getUser,deleteUser,updateUser, getFlatsListedByUser}=require("../controller/user")
+const {userSignUp,userLogin,google,userLogout,getUser,deleteUser,updateUser, getFlatsListedByUser}=require("../controller/user")
 
 const {verifyToken} = require("../middleware/auth");
 
 router.post("/signup",userSignUp)
 router.post("/login",userLogin)
+router.post("/google",google);
 router.get("/logout",userLogout)
 
 router.get("/:id",verifyToken, getUser);

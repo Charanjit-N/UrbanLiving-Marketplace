@@ -14,9 +14,9 @@ export default function Home() {
   SwiperCore.use([Navigation]);
 
   const HomePageswiperImages = [
-    '/HomeSwiperImages/img1.jpg',
-    '/HomeSwiperImages/img2.png',
-    '/HomeSwiperImages/img3.png',
+     '/HomeSwiperImages/img1.jpg',
+    '/HomeSwiperImages/img2.jpg',
+    '/HomeSwiperImages/img3.jpg',
     '/HomeSwiperImages/img4.jpg',
     '/HomeSwiperImages/img5.jpg',
     '/HomeSwiperImages/img6.jpg',
@@ -26,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch("/api/flat-pg/get?offer=true&limit=4");
+        const res = await fetch("/api/flat-pg/get?offer=true&limit=3");
         const data = await res.json();
         setOfferListings(data);
         fetchApartmentSaleListings();
@@ -38,7 +38,7 @@ export default function Home() {
     const fetchApartmentSaleListings = async () => {
       try {
         const res = await fetch(
-          "/api/flat-pg/get?category=apartment&type=sale&limit=4"
+          "/api/flat-pg/get?category=apartment&type=sale&limit=3"
         );
         const data = await res.json();
         setApartmentSaleListings(data);
@@ -51,7 +51,7 @@ export default function Home() {
     const fetchApartmentRentListings = async () => {
       try {
         const res = await fetch(
-          "/api/flat-pg/get?category=apartment&type=rent&limit=4"
+          "/api/flat-pg/get?category=apartment&type=rent&limit=3"
         );
         const data = await res.json();
         setApartmentRentListings(data);
@@ -64,7 +64,7 @@ export default function Home() {
     const fetchPgRentListings = async () => {
       try {
         const res = await fetch(
-          "/api/flat-pg/get?category=pg&type=rent&limit=4"
+          "/api/flat-pg/get?category=pg&type=rent&limit=3"
         );
         const data = await res.json();
         setPgRentListings(data);
@@ -77,7 +77,7 @@ export default function Home() {
   }, []);
   return (
     <div>
-      <div className="flex flex-col gap-6 p-25 px-3 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-6 pt-20 pb-15 px-3 max-w-6xl mx-auto">
         <h1 className="text-black font-bold text-4xl md:text-6xl">
           Welcome to <span className="text-gray-400">Urban Living</span>
           <br />
@@ -95,7 +95,7 @@ export default function Home() {
 
         <Link
           to={"/search"}
-          className="bg-blue-700 px-8 py-2 text-lg text-white font-bold w-fit rounded-3xl"
+          className="bg-yellow-400 px-8 py-2 text-lg text-black font-bold w-fit rounded-3xl"
         >
           Explore....
         </Link>
@@ -143,7 +143,7 @@ export default function Home() {
                 Show more
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-10">
               {offerListings.map((listing) => (
                 <ApartmentItem
                   listing={listing}
@@ -161,13 +161,13 @@ export default function Home() {
                 Recent Appartments for sale{" "}
               </h2>
               <Link
-                to={"/search?type=rent"}
+                to={"/search?category=apartment&type=sale"}
                 className="text-sm text-blue-800 hover:underline"
               >
                 Show more
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-10">
               {apartmentSaleListings.map((listing) => (
                 <ApartmentItem
                   listing={listing}
@@ -185,13 +185,13 @@ export default function Home() {
                 Recent Appartments for rent{" "}
               </h2>
               <Link
-                to={"/search?type=rent"}
+                to={"/search?category=apartment&type=rent"}
                 className="text-sm text-blue-800 hover:underline"
               >
                 Show more
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-10">
               {apartmentRentListings.map((listing) => (
                 <ApartmentItem
                   listing={listing}
@@ -209,13 +209,13 @@ export default function Home() {
                 Recent PG for rent
               </h2>
               <Link
-                to={"/search?type=sale"}
+                to={"/search?category=pg&type=rent"}
                 className="text-sm text-blue-800 hover:underline"
               >
                 Show more
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-10">
               {pgRentListings.map((listing) => (
                 <ApartmentItem
                   listing={listing}

@@ -67,8 +67,11 @@ export default function NewListing() {
 
     if (id === "apartment" || id === "pg") {
       newFormData.category = id;
-      if (id === "pg") {
-        newFormData.type = "rent";
+      if (id === "apartment") {
+        newFormData.sharing = 0; 
+      } else if (id === "pg") {
+        newFormData.bhk = 0;     
+        newFormData.type = "rent"; // A PG can only be for rent
       }
     } else if (id === "rent" || id === "sale") {
       newFormData.type = id;
@@ -76,8 +79,11 @@ export default function NewListing() {
       e.target.id === "parking" ||
       e.target.id === "furnished" ||
       e.target.id === "offer"
-    ) {
+    ){
       newFormData[id] = checked;
+      if (id === "offer" && !checked) {
+        newFormData.discountPrice = 0;
+      }
     } else if (
       e.target.type === "number" ||
       e.target.type === "text" ||
@@ -88,6 +94,7 @@ export default function NewListing() {
 
     setFormData(newFormData);
   };
+
 
   const handleImageUpload = async (e) => {
     if (!files || files.length === 0) {
@@ -148,7 +155,7 @@ export default function NewListing() {
         setUploading(false);
       }
     } else {
-      setImageUploadError("You can only upload 5 images per listing");
+      setImageUploadError("You can only upload max of 5 images");
       setUploading(false);
     }
   };
@@ -184,15 +191,15 @@ export default function NewListing() {
         }),
       });
       const data = await res.json();
-      setLoading(false);
       if (data.success === false) {
         setError(data.message);
+        setLoading(false);
         return;
       }
 
       isSubmittingRef.current = true;
 
-      // 2. On successful update, if there are images to delete, delete them
+      
       if (deleteImagePublicIds.length > 0) {
         await fetch("/api/deleteImageFromCloudinary", {
           method: "POST",
@@ -207,20 +214,18 @@ export default function NewListing() {
     }
   };
 
-  // This effect's only job is to update the ref when the state changes.
+ 
   useEffect(() => {
     newlyUploadedImagesRef.current = newlyUploadedImages;
   }, [newlyUploadedImages]);
-  // Cleanup Logic for Navigating Away ---
 
+  // Cleanup Logic for Navigating Away without submitting
   useEffect(() => {
     return () => {
-      // This cleanup function will now ONLY run on unmount
 
       if (isSubmittingRef.current) {
         return;
       }
-      // Read the LATEST value from the ref
       const publicIdsToClean = newlyUploadedImagesRef.current.map(
         (img) => img.public_id
       );
@@ -238,7 +243,7 @@ export default function NewListing() {
         });
       }
     };
-  }, []); // The empty array [] ensures this runs ONLY on mount and unmount
+  }, []); 
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -316,7 +321,7 @@ export default function NewListing() {
 
           <input
             type="text"
-            placeholder="contact"
+            placeholder="Owner contact"
             className="border p-3 rounded-lg"
             id="contact"
             required
@@ -588,7 +593,7 @@ export default function NewListing() {
 
           <button
             disabled={loading || uploading}
-            className="p-3 bg-blue-400 text-white rounded-lg hover:opacity-95 disabled:opacity-80 cursor-pointer"
+            className="p-3 bg-yellow-300 font-semibold rounded-lg  disabled:opacity-80 cursor-pointer"
           >
             {loading ? "Updating....." : "Update"}
           </button>

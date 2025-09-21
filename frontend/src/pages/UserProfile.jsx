@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { FaUserCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateUserStart,
@@ -95,20 +94,24 @@ export default function UserProfile() {
     <div className="p-3 max-w-lg mx-auto mb-30">
       <h1 className="text-3xl font-semibold text-center my-5">Profile</h1>
 
-      <div className="flex justify-center">
-        <FaUserCircle className="w-20 h-20 mb-6" />
+      <div className="flex justify-center items-center mb-9">
+        <div className="w-25 h-25 flex items-center justify-center rounded-full bg-gray-200">
+          <span className="text-4xl font-semibold text-black">
+            {currentUser.username.charAt(0).toUpperCase()}
+          </span>
+        </div>
       </div>
 
-      <div className=" flex justify-center mb-7 gap-7">
+      <div className=" flex justify-center mb-7 gap-10">
         <Link
-          className="bg-blue-500 text-white p-2 rounded-lg  text-center hover:opacity-90"
+          className="bg-blue-500 font-semibold text-white p-2  rounded-lg  text-center hover:opacity-90"
           to="/new-listing"
         >
-          New Listing
+          Create Listing
         </Link>
 
         <Link
-          className="bg-blue-500 text-white p-2 rounded-lg text-center hover:opacity-90"
+          className="bg-blue-500 font-semibold text-white p-2 px-3 rounded-lg text-center hover:opacity-90"
           to="/my-listings"
         >
           My Listings
@@ -144,7 +147,7 @@ export default function UserProfile() {
 
         <button
           disabled={loadingAction !== null} // Disable if any action is loading
-          className="bg-slate-700 text-white rounded-lg p-3 cursor-pointer hover:opacity-90 "
+          className="bg-yellow-300 font-semibold text-black rounded-lg p-3 cursor-pointer hover:opacity-90 "
         >
           {loadingAction === "update" ? "Updating..." : "Update"}
         </button>
@@ -152,22 +155,22 @@ export default function UserProfile() {
 
       <div className="flex justify-between mt-5">
         <button
-          className="bg-red-500 cursor-pointer text-white p-2 rounded-lg text-center hover:opacity-90 "
+          className="bg-red-600 cursor-pointer font-semibold text-white p-2 rounded-lg text-center hover:opacity-90 "
           onClick={handleOnDeleteUser}
-          disabled={loadingAction !== null} // Disable if any action is loading
+          disabled={loadingAction !== null} 
         >
-          {loadingAction === "delete" ? "Deleting..." : "Delete account"}
+          {loadingAction === "delete" ? "Deleting....." : "Delete account"}
         </button>
 
         <button
-          className="bg-red-500 cursor-pointer  text-white p-2 rounded-lg text-center hover:opacity-90"
+          className="bg-red-600 cursor-pointer font-semibold text-white py-2 px-5 rounded-lg text-center hover:opacity-90"
           onClick={handleOnSignOut}
         >
-          SignOut
+          Signout
         </button>
       </div>
       <div className="flex justify-center">
-        <p className="text-red-700 mt-5">{error ? error : " "}</p>
+        <p className="text-red-600 mt-5">{error ? error : " "}</p>
         <p className="text-green-700 mt-5">
           {updateSuccess ? "user updated successfully" : ""}
         </p>

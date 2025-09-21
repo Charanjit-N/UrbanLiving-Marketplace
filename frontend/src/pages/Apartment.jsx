@@ -44,9 +44,9 @@ export default function Apartment() {
 
   return (
     <main>
-      {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
+      {loading && <p className="text-center my-7 text-2xl">Loading.....</p>}
       {error && (
-        <p className="text-center my-7 text-2xl">something went wrong</p>
+        <p className="text-center my-7 text-2xl">something went wrong !!</p>
       )}
       {listing && !loading && !error && (
         <>
@@ -76,35 +76,36 @@ export default function Apartment() {
             <div className="swiper-pagination-container flex justify-center mt-4"></div>
           </div>
 
-          <div className="flex flex-col max-w-6xl mx-auto p-3 my-7 gap-3">
-            <p className="text-2xl font-semibold flex items-baseline gap-10">
+          <div className="flex flex-col max-w-6xl mx-auto p-3 mt-2 mb-7 gap-3">
+            <div className="text-4xl font-bold flex flex-col md:flex-row items-baseline gap-3 md:gap-18">
               {listing.name}
               <span className="text-gray-600 text-lg font-normal flex items-center gap-1">
                 contact owner : <IoCall /> {listing.contact}
               </span>
-            </p>
-            <p className="text-slate-800">
+            </div>
+
+            <p className =" text-gray-600 text-lg font-semibold">
               {listing.category === "apartment" ? (
-                <span className="font-semibold text-black">
+                <span className=" text-black">
                   Apartment Number :{" "}
                 </span>
               ) : (
-                <span className="font-semibold text-black">Room Number : </span>
+                <span className="text-black">Room Number : </span>
               )}
               {listing.apartmentNumber}
             </p>
 
-            <p className="flex items-center gap-2 text-slate-600 mb-2 text-sm">
+            <p className="flex items-center gap-2 text-gray-600 mb-2 text-md">
               <IoLocationSharp className="text-green-700" />
               {listing.address}
             </p>
             <div className="flex gap-4">
-              <p className="bg-blue-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
+              <p className="bg-blue-900 w-full max-w-[180px] text-white text-center p-1 rounded-md">
                 {listing.type === "rent" ? "For Rent" : "For Sale"}
               </p>
               {listing.offer ? (
                 <>
-                  <p className="bg-red-500 line-through w-full max-w-[200px] text-white text-center p-1 rounded-md">
+                  <p className="bg-red-700 line-through w-full max-w-[200px] text-white text-center p-1 rounded-md">
                     ₹ {listing.regularPrice.toLocaleString("en-IN")}
                     {listing.type === "rent" && "/month"}
                   </p>
@@ -121,8 +122,8 @@ export default function Apartment() {
                 </p>
               )}
             </div>
-            <p className="text-slate-800">
-              <span className="font-semibold text-black">Description : </span>
+            <p className="text-gray-600 text-md">
+              <span className="font-semibold text-lg text-black">Description : </span>
               {listing.description}
             </p>
 
@@ -135,30 +136,29 @@ export default function Apartment() {
 
               {listing.category === "pg" && (
                 <li className=" text-green-900 flex items-center gap-1 whitespace-nowrap ">
-                  <IoPeople className="text-lg" /> {listing.sharing} sharing
+                  <IoPeople className="text-xl" /> {listing.sharing} Sharing
                 </li>
               )}
 
               {listing.parking ? (
                 <li className="text-green-900 flex items-center gap-1 whitespace-nowrap ">
-                  <FaParking className="text-lg" /> Parking Space
+                  <FaParking className="text-xl" /> Parking Space
                 </li>
               ) : (
                 <li className="text-red-900 flex items-center gap-1 whitespace-nowrap ">
-                  <CiNoWaitingSign className="text-lg" /> No parking
+                  <CiNoWaitingSign className="text-xl stroke-[2] " /> No Parking Space
                 </li>
               )}
 
               {listing.furnished ? (
                 <li className="text-green-900 flex items-center gap-1 whitespace-nowrap ">
-                  <MdChair className="text-lg" /> Furnished
+                  <MdChair className="text-xl" /> Furnished
                 </li>
               ) : (
                 <li className="text-red-900 flex items-center gap-1 whitespace-nowrap ">
-                  <CiNoWaitingSign className="text-lg" /> No Furniture
+                  <CiNoWaitingSign className="text-xl stroke-[2]" /> No Furniture
                 </li>
               )}
-
             </ul>
           </div>
 

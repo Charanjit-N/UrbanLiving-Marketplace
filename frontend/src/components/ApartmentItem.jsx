@@ -4,10 +4,11 @@ import { IoPeople, IoLocationSharp } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
 export default function ApartmentItem({ listing }) {
   return (
-    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
+    <div className="bg-white shadow-md overflow-hidden rounded-lg w-full sm:w-[330px] hover:scale-105 transition-scale duration-200">
+      
       <Link to={`/apartment-pg/${listing._id}`}>
         <img
-          className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300"
+          className="h-[320px] sm:h-[220px] w-full object-cover"
           src={listing.imageInfo[0].url}
           alt="cover image"
         ></img>

@@ -52,19 +52,21 @@ export default function Navbar() {
             navigate("/");
           }}
         >
-          <BsBuildingsFill className="text-yellow-300 text-xl" />
-          <span className="text-yellow-300">Urban Living</span>
+          <BsBuildingsFill className="text-yellow-300 text-lg sm:text-xl" />
+          <span className="text-yellow-300 text-lg sm:text-3xl">
+            Urban Living
+          </span>
         </div>
 
         {/* Search */}
         <form
           onSubmit={handleOnSubmit}
-          className="bg-gray-100 p-2 m-1 rounded-lg flex items-center"
+          className="bg-gray-50 p-2 m-1 rounded-lg flex items-center"
         >
           <input
             type="text"
-            placeholder="Search..."
-            className="bg-transparent focus:outline-none w-24 sm:w-64"
+            placeholder="Search...."
+            className="bg-transparent focus:outline-none w-18 sm:w-70"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
@@ -74,9 +76,9 @@ export default function Navbar() {
         </form>
 
         {/* Desktop Menu */}
-        <ul className="items-center font-bold flex text-white gap-8 ">
+        <ul className="font-bold flex items-center text-white gap-8 ">
           <li
-            className="hidden lg:inline  hover:underline cursor-pointer"
+            className="hidden lg:inline  hover:text-yellow-300  cursor-pointer"
             onClick={() => {
               navigate("/");
             }}
@@ -84,7 +86,7 @@ export default function Navbar() {
             Home
           </li>
           <li
-            className="hidden lg:inline  hover:underline cursor-pointer"
+            className="hidden lg:inline  hover:text-yellow-300 cursor-pointer"
             onClick={() => {
               navigate("/my-listings");
             }}
@@ -92,7 +94,7 @@ export default function Navbar() {
             My Listings
           </li>
           <li
-            className="hidden lg:inline  hover:underline cursor-pointer"
+            className="hidden lg:inline  hover:text-yellow-300  cursor-pointer"
             onClick={() => {
               navigate("/about");
             }}
@@ -105,15 +107,18 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => navigate("/user-profile")}
-                aria-label="View user profile" 
-                className=" hidden lg:inline bg-transparent border-none cursor-pointer" 
+                className=" hidden lg:inline bg-transparent border-none cursor-pointer"
               >
-                <FaUserCircle className="w-10 h-10" />
+                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-white hover:bg-yellow-300">
+                  <span className="text-2xl font-semibold text-black">
+                    {currentUser.username.charAt(0).toUpperCase()}
+                  </span>
+                </div>
               </button>
             </li>
           ) : (
             <li
-              className="hidden lg:inline hover:underline cursor-pointer"
+              className="hidden lg:inline hover:text-yellow-300  cursor-pointer"
               onClick={() => {
                 navigate("/signIn");
               }}
@@ -162,13 +167,19 @@ export default function Navbar() {
             </button>
             {currentUser ? (
               <button
+                type="button"
                 onClick={() => {
                   navigate("/user-profile");
                   setMenuOpen(false);
                 }}
-                className="flex gap-2 cursor-pointer"
+                className="flex gap-2 items-center cursor-pointer"
               >
-                <FaUserCircle className="w-6 h-6" /> Profile
+                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-black">
+                  <span className="text-xl font-semibold text-white">
+                    {currentUser.username.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <p> profile</p>
               </button>
             ) : (
               <button

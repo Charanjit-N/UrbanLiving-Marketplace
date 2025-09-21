@@ -1,8 +1,10 @@
 const User = require("../models/user");
+const flats = require("../models/flat");
 const errorHandler = require("../middleware/error");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const flats = require("../models/flat");
+
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 
@@ -62,10 +64,47 @@ const userLogin = async (req, res, next) => {
   }
 };
 
+const google = async (req, res, next) => {
+  const { email, name } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+      const { password: pass, ...remain } = user._doc;
+      res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json(remain);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+
+      const hashedPassword = await bcrypt.hash(generatedPassword, 10);
+      
+      const newUser = await User.create({
+        username:
+          name.split(" ").join("").toLowerCase() +"_"+
+          Math.random().toString(36).slice(2,6),
+        email,
+        password: hashedPassword,
+      });
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY);
+      const { password: pass, ...remain } = newUser._doc;
+      res
+        .cookie("access_token", token, { httpOnly: true })
+        .status(200)
+        .json(remain);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const userLogout = async (req, res, next) => {
   try {
     res.clearCookie("access_token");
-    res.status(200).json("user has been logged out !");
+    res.status(200).json("user has been Signed out !");
   } catch (err) {
     next(err);
   }
@@ -132,7 +171,6 @@ const deleteUser = async (req, res, next) => {
     return next(errorHandler(401, "You can only delete your own account"));
 
   try {
-
     const userListings = await flats.find({ listedBy: req.params.id });
 
     if (userListings && userListings.length > 0) {
@@ -154,7 +192,10 @@ const deleteUser = async (req, res, next) => {
     res.clearCookie("access_token");
     res
       .status(200)
-      .json({success: true, message:"user has been deleted and his listed flats also deleted!"});
+      .json({
+        success: true,
+        message: "user has been deleted and his listed flats also deleted!",
+      });
   } catch (err) {
     next(err);
   }
@@ -176,6 +217,7 @@ const getFlatsListedByUser = async (req, res, next) => {
 module.exports = {
   userSignUp,
   userLogin,
+  google,
   userLogout,
   getUser,
   deleteUser,

@@ -43,8 +43,11 @@ export default function NewListing() {
 
     if (id === "apartment" || id === "pg") {
       newFormData.category = id;
-      if (id === "pg") {
-        newFormData.type = "rent";
+      if (id === "apartment") {
+        newFormData.sharing = 0; 
+      } else if (id === "pg") {
+        newFormData.bhk = 0;     
+        newFormData.type = "rent"; // A PG can only be for rent
       }
     } else if (id === "rent" || id === "sale") {
       newFormData.type = id;
@@ -52,8 +55,11 @@ export default function NewListing() {
       e.target.id === "parking" ||
       e.target.id === "furnished" ||
       e.target.id === "offer"
-    ) {
+    ){
       newFormData[id] = checked;
+      if (id === "offer" && !checked) {
+        newFormData.discountPrice = 0;
+      }
     } else if (
       e.target.type === "number" ||
       e.target.type === "text" ||
@@ -123,7 +129,7 @@ export default function NewListing() {
         setUploading(false);
       }
     } else {
-      setImageUploadError("You can only upload 5 images per listing");
+      setImageUploadError("You can only upload max of 5 images");
       setUploading(false);
     }
   };
@@ -306,7 +312,7 @@ export default function NewListing() {
 
           <input
             type="text"
-            placeholder="contact"
+            placeholder="Owner contact"
             className="border p-3 rounded-lg"
             id="contact"
             minLength={8}
@@ -580,7 +586,7 @@ export default function NewListing() {
 
           <button
             disabled={loading || uploading}
-            className="p-3 bg-blue-400 text-white rounded-lg hover:opacity-95 disabled:opacity-80 cursor-pointer"
+            className="p-3 bg-yellow-300 font-semibold rounded-lg  disabled:opacity-80 cursor-pointer"
           >
             {loading ? "Adding....." : "Add Apartment / PG"}
           </button>

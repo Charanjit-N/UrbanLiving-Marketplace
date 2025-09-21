@@ -71,7 +71,7 @@ export default function MyListings() {
         });
       }
 
-      // Update the UI to remove the listing
+      // Updating the UI to remove the listing
       setUserListings((prev) =>
         prev.filter((listing) => listing._id !== listingId)
       );
@@ -107,7 +107,7 @@ export default function MyListings() {
           <div className="mt-7 flex justify-between items-center">
             <h1 className="text-center text-3xl font-semibold">My Listings</h1>
             <Link
-              className="flex items-center justify-center bg-blue-500 text-white rounded-lg h-7 mt-2 px-2 hover:opacity-90"
+              className="flex items-center justify-center bg-blue-600 text-white rounded-lg h-7 mt-2 py-4 px-2 hover:opacity-90"
               to="/new-listing"
             >
               Create Listing
@@ -128,23 +128,23 @@ export default function MyListings() {
               </Link>
               <Link
                 to={`/apartment-pg/${listing._id}`}
-                className="text-slate-700 font-semibold hover:underline truncate flex-1"
+                className=" font-semibold hover:underline truncate flex-1"
               >
                 <p>{listing.name}</p>
               </Link>
 
-              <div className="flex flex-col item-center">
+              <div className="flex  gap-4 item-center">
                 <Link to={`/update-listing/${listing._id}`}>
-                  <button className="text-green-700 cursor-pointer">
-                    Edit
+                  <button className="bg-yellow-300 px-2 rounded-md cursor-pointer">
+                    update
                   </button>
                 </Link>
                 <button
                   onClick={() => handleListingDelete(listing._id)}
-                  className="text-red-700 cursor-pointer"
+                  className="bg-red-600 px-2 text-white rounded-md cursor-pointer"
                   disabled={deletingId === listing._id}
                 >
-                  {deletingId === listing._id ? "deleting..." : "Delete"}
+                  {deletingId === listing._id ? "deleting..." : "delete"}
                 </button>
               </div>
             </div>
