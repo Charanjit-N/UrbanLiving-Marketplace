@@ -78,7 +78,7 @@ export default function UserProfile() {
       dispatch(signOutUserStart());
 
       const res = await fetch("/api/user/logout");
-      const data = res.json();
+      const data = await res.json();
       if (!res.ok) {
         dispatch(signOutUserFailure(data.message));
         return;
@@ -157,16 +157,18 @@ export default function UserProfile() {
         <button
           className="bg-red-600 cursor-pointer font-semibold text-white p-2 rounded-lg text-center hover:opacity-90 "
           onClick={handleOnDeleteUser}
-          disabled={loadingAction !== null} 
+          disabled={loadingAction !== null}
         >
           {loadingAction === "delete" ? "Deleting....." : "Delete account"}
         </button>
 
         <button
-          className="bg-red-600 cursor-pointer font-semibold text-white py-2 px-5 rounded-lg text-center hover:opacity-90"
+          className="bg-red-600 cursor-pointer font-semibold text-white py-2 px-5 rounded-lg text-center hover:opacity-90 disabled:opacity-70"
           onClick={handleOnSignOut}
+          disabled={loadingAction !== null} // Disable if any action is running
         >
-          Signout
+          {/* Add the ternary logic for the text */}
+          {loadingAction === "signout" ? "Signing out..." : "Sign Out"}
         </button>
       </div>
       <div className="flex justify-center">

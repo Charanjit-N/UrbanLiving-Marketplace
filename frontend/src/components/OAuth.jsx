@@ -26,7 +26,6 @@ export default function OAuth() {
         }),
       });
       const data = await res.json();
-       console.log('Data received from OAuth backend:', data);
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (err) {
