@@ -102,7 +102,7 @@ export default function Navbar() {
             About
           </li>
 
-          {currentUser ? (
+          {currentUser && currentUser.username ? (
             <li>
               <button
                 type="button"
@@ -165,7 +165,7 @@ export default function Navbar() {
             >
               About
             </button>
-            {currentUser ? (
+            {currentUser && currentUser.username  ? (
               <button
                 type="button"
                 onClick={() => {

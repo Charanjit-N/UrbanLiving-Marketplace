@@ -28,7 +28,7 @@ export default function Home() {
       try {
         const res = await fetch("/api/flat-pg/get?offer=true&limit=3");
         const data = await res.json();
-        setOfferListings(data);
+        setOfferListings(data.listings);
         fetchApartmentSaleListings();
       } catch (err) {
         console.log(err);
@@ -41,7 +41,7 @@ export default function Home() {
           "/api/flat-pg/get?category=apartment&type=sale&limit=3"
         );
         const data = await res.json();
-        setApartmentSaleListings(data);
+        setApartmentSaleListings(data.listings);
         fetchApartmentRentListings();
       } catch (err) {
         console.log(err);
@@ -54,7 +54,7 @@ export default function Home() {
           "/api/flat-pg/get?category=apartment&type=rent&limit=3"
         );
         const data = await res.json();
-        setApartmentRentListings(data);
+        setApartmentRentListings(data.listings);
         fetchPgRentListings();
       } catch (err) {
         console.log(err);
@@ -67,7 +67,7 @@ export default function Home() {
           "/api/flat-pg/get?category=pg&type=rent&limit=3"
         );
         const data = await res.json();
-        setPgRentListings(data);
+        setPgRentListings(data.listings);
       } catch (err) {
         console.log(err);
       }

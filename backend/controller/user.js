@@ -204,7 +204,7 @@ const deleteUser = async (req, res, next) => {
 const getFlatsListedByUser = async (req, res, next) => {
   if (req.user.id === req.params.id) {
     try {
-      const userListedflats = await flats.find({ listedBy: req.params.id });
+      const userListedflats = await flats.find({ listedBy: req.params.id }).sort({['createdAt']: 'desc'});
       res.status(200).json(userListedflats);
     } catch (error) {
       next(error);
