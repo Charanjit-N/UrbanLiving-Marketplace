@@ -37,7 +37,7 @@ export default function About() {
       </p>
 
      
-      <div className =" flex mt-10 ">
+      <div className =" flex mt-10 flex-col sm:flex-row">
           <h2 className="text-xl font-bold mb-2">
             <span className="text-black">Charanjit Nandigama &nbsp; : &nbsp; </span>
           </h2>
