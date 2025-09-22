@@ -78,7 +78,7 @@ export default function Home() {
   return (
     <div>
       <div className="flex flex-col gap-6 pt-20 pb-15 px-3 max-w-6xl mx-auto">
-        <h1 className="text-black font-bold text-4xl md:text-6xl">
+        <h1 className="text-black font-bold text-3xl md:text-6xl">
           Welcome to <span className="text-gray-400">Urban Living</span>
           <br />
           <span className="text-xl md:text-3xl">
