@@ -6,7 +6,6 @@ const cors=require("cors")
 const cookieParser = require('cookie-parser');
 const cloudinary = require('cloudinary').v2;
 
-
 const PORT=process.env.PORT || 5000
 
 cloudinary.config({ 
@@ -21,7 +20,7 @@ app.use(cors())
 
 app.use(express.json())
 app.use(cookieParser());
-app.use(cors())
+
 app.use(express.static("public"))
 
 //  check endpoint to tell front end whether server is up or not
