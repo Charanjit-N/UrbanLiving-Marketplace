@@ -5,6 +5,7 @@ const connectDb=require("./config/connectionDb")
 const cors=require("cors")
 const cookieParser = require('cookie-parser');
 const cloudinary = require('cloudinary').v2;
+const cors = require('cors');
 
 const PORT=process.env.PORT || 5000
 
@@ -15,6 +16,8 @@ cloudinary.config({
 });
 
 connectDb()
+
+app.use(cors())
 
 app.use(express.json())
 app.use(cookieParser());
