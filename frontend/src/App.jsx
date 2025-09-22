@@ -35,8 +35,6 @@ const router = createBrowserRouter([
           { path: "/my-listings", element: <MyListings /> },
         ],
       },
-
-      
     ],
   },
 ]);

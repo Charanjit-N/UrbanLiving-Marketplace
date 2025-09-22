@@ -11,6 +11,7 @@ export default function Home() {
   const [apartmentSaleListings, setApartmentSaleListings] = useState([]);
   const [apartmentRentListings, setApartmentRentListings] = useState([]);
   const [pgRentListings, setPgRentListings] = useState([]);
+  
   SwiperCore.use([Navigation]);
 
   const HomePageswiperImages = [

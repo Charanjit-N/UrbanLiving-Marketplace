@@ -21,6 +21,11 @@ app.use(cookieParser());
 app.use(cors())
 app.use(express.static("public"))
 
+//  check endpoint to tell front end whether server is up or not
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use("/user",require("./routes/user"))
 app.use("/flat-pg",require("./routes/flat"))
 

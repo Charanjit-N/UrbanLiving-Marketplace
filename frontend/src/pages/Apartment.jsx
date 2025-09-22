@@ -25,7 +25,7 @@ export default function Apartment() {
         setLoading(true);
         const res = await fetch(`/api/flat-pg/get/${params.apartmentId}`);
         const data = await res.json();
-        console.log("API Response Data:", data);
+        // console.log("API Response Data:", data);
         if (data.success === false) {
           setError(true);
           setLoading(false);
