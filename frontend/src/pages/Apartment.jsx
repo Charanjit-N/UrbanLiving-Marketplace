@@ -100,23 +100,23 @@ export default function Apartment() {
               {listing.address}
             </p>
             <div className="flex gap-4">
-              <p className="bg-blue-900 w-full max-w-[180px] text-white text-center p-1 rounded-md">
+              <p className="bg-blue-900 w-fit text-white text-center p-2 rounded-md">
                 {listing.type === "rent" ? "For Rent" : "For Sale"}
               </p>
               {listing.offer ? (
                 <>
-                  <p className="bg-red-700 line-through w-full max-w-[200px] text-white text-center p-1 rounded-md">
+                  <p className="bg-red-700 line-through w-fit  text-white text-center p-2 rounded-md">
                     ₹ {listing.regularPrice.toLocaleString("en-IN")}
                     {listing.type === "rent" && "/month"}
                   </p>
 
-                  <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
+                  <p className="bg-green-900 w-fit text-white text-center p-2 rounded-md">
                     ₹ {listing.discountPrice.toLocaleString("en-IN")}
                     {listing.type === "rent" && "/month"}
                   </p>
                 </>
               ) : (
-                <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
+                <p className="bg-green-900 w-fit  text-white text-center p-2 rounded-md">
                   ₹ {listing.regularPrice.toLocaleString("en-IN")}
                   {listing.type === "rent" && "/month"}
                 </p>
@@ -127,7 +127,7 @@ export default function Apartment() {
               {listing.description}
             </p>
 
-            <ul className="font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6">
+            <ul className="font-semibold flex flex-wrap items-center gap-4 sm:gap-6">
               {listing.category === "apartment" && (
                 <li className="text-green-900 flex items-center gap-1 whitespace-nowrap ">
                   <FaHome className="text-lg" /> {listing.bhk} BHK
