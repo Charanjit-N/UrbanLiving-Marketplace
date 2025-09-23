@@ -15,7 +15,7 @@ const ServerWakeUpScreen = () => (
 );
 
 export default function MainNavigation() {
-  const [serverStatus, setServerStatus] = useState("initializing");
+  const [serverStatus, setServerStatus] = useState("pending");
 
   useEffect(() => {
     const checkServerHealth = async () => {
@@ -25,25 +25,23 @@ export default function MainNavigation() {
           setServerStatus("ready");
           return true;
         }
-      } catch {}
+      } catch(error) {}
       return false;
     };
 
     checkServerHealth().then((isReady) => {
       if (!isReady) {
-        setServerStatus("pending"); 
         const intervalId = setInterval(async () => {
           const ready = await checkServerHealth();
-          if (ready) clearInterval(intervalId);
+          if (ready){
+            clearInterval(intervalId);
+          }
         }, 5000);
         return () => clearInterval(intervalId);
       }
     });
   }, []);
 
-  if (serverStatus === "initializing") {
-    return null;
-  }
 
   if (serverStatus === "pending") {
     return <ServerWakeUpScreen />;
